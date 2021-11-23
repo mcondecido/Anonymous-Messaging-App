@@ -5,3 +5,5 @@
 - Figure out how to deploy on Heroku
 - Edit Frontend
 - Deadline to have a working application: Saturday, Nov 27
+- Public Room / Private Room Feature
+- Set time limit on messages
