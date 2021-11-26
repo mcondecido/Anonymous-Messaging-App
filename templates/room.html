@@ -57,7 +57,9 @@ body {
 </head>
 <body>
 
-<h2>{{room}} - DjChat</h2>
+<center>
+<h2>Room Name: {{room}}</h2>
+</center>
 
 <div id="display">
 
@@ -131,9 +133,68 @@ setInterval(function(){
         <input type="submit" value="Send">
     </form>
 </div>
+<center>
+<h3>Invite a friend to this group chat!</h3> 
+<p>Type in a valid email address. Our website's Gmail account will send the recipient an email containing the link to this website and the room code that you are currently inhabiting. </p></center>
+<div class="container">
+    <style>
+    input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
 
+    input[type=submit] {
+    width: 100%;
+    background-color: #4CAF49;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
 
-</body>
+    input[type=submit]:hover {
+    background-color: #45a048;
+    }
+
+    div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    }
+    </style>
+
+    <form id="emails" >
+        {% csrf_token %}
+        <input type="text" name="recipient" id="recipient" width="100px" />
+        <input type="hidden" name="room_name" id="room_name" value="{{room_details.name}}"/>
+
+        <input type="submit"  value="Send Invitation Email">
+    </form>
+</div>
+<script type="text/javascript">
+  $(document).on('submit','#emails',function(e){
+    e.preventDefault();
+    $.ajax({
+        type:'POST',
+        url:'/send_email',
+        data:{
+          recipient:$('#recipient').val(),
+          room_name:$('#room_name').val(),
+          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+        },
+        success: function(data){
+          alert(data)
+        }
+    });
+});
+</script>
 
 <script type="text/javascript">
   $(document).on('submit','#post-form',function(e){
@@ -149,11 +210,12 @@ setInterval(function(){
         csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
       },
       success: function(data){
-       //  alert(data)
+        alert(data)
       }
     });
     document.getElementById('message').value = ''
   });
 </script>
+
 
 </html>

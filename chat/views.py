@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from chat.models import Room, Message
 from django.http import HttpResponse, JsonResponse
+from django.core.mail import EmailMessage
 
 # Create your views here.
 def home(request):
@@ -43,3 +44,15 @@ def getMessages(request, room):
     room_details = Room.objects.get(name=room)
     messages = Message.objects.filter(room=room_details.id)
     return JsonResponse({'messages': list(messages.values())})
+
+
+def send_email(request):
+    try:
+        recipient= request.POST['recipient']
+        room_name = request.POST['room_name']
+        msg = EmailMessage('Join this anonymous group chat session!',
+                        ' Go to this link - https://anonymous-chat-app-4501.herokuapp.com/ \n Create a new username and enter this room code: ' + room_name + '.', to=[recipient])
+        msg.send()
+        return HttpResponse('Email sent!')
+    except:
+        return HttpResponse('Incorrect email format!')
