@@ -31,7 +31,7 @@ SECRET_KEY = get_random_secret_key()
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 
 # Application definition
@@ -117,7 +117,7 @@ EMAIL_HOST_PASSWORD = 'CS4501email2:00-3:15classtime'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 
