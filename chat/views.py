@@ -1,9 +1,13 @@
 # resource : https://www.youtube.com/watch?v=IpAk1Eu52GU&t=2297s
 from django.shortcuts import render, redirect
-from chat.models import Room, Message
+from chat.models import Room, PrivateRoom, Message
 from django.http import HttpResponse, JsonResponse
 from django.core.mail import EmailMessage
 from django.views import generic
+from django.contrib.auth.hashers import check_password
+from django.views.generic.base import TemplateView
+import json
+
 
 # Create your views here.
 #def home(request):
@@ -15,6 +19,9 @@ class HomeView(generic.ListView):
 
     def get_queryset(self):
         return Room.objects.all()
+
+class RoomCreateView(TemplateView): 
+    template_name = 'room_create.html'
 
 def room(request, room):
     username = request.GET.get('username')
@@ -28,12 +35,41 @@ def room(request, room):
 def checkview(request):
     room = request.POST['room_name']
     username = request.POST['username']
+    password = request.POST['password']
+    private = bool(request.POST['private'])
+
+    return HttpResponse(private)
 
     if Room.objects.filter(name = room).exists():
+        if private:
+            curr_pass = PrivateRoom.objects.filter(name = room).only("password") #not sure if this is the right way to access password field
+            pass_match = check_password(curr_pass, password)
+            if pass_match:
+                return redirect("/"+room+"/?username="+username)
+            else:
+                return HttpResponse("Incorrect Password.")
         return redirect("/"+room+"/?username="+username)
     else:
-        new_room = Room.objects.create(name = room)
+        return HttpResponse("Room with entered name does not exist.")
+
+def makeroom(request):
+    room = request.POST['room_name']
+    username = request.POST['username']
+    password = request.POST['password']
+    private = bool(request.POST['private'])
+
+    if Room.objects.filter(name = room).exists():
+        return HttpResponse('Room with entered name already exists. Please choose a different room name.')
+    else:
+        if private:
+            new_room = Room.objects.create(name = room, private=True)
+            priv_room = PrivateRoom.objects.create(name = room, private=True, password=password)
+            priv_room.save()
+        else:
+            new_room = Room.objects.create(name = room)
+        print(private)
         new_room.save()
+
         return redirect("/"+room+"/?username="+username)
 
 #creates new message on submit
@@ -49,7 +85,7 @@ def send(request):
 #displays all messages in room
 def getMessages(request, room):
     room_details = Room.objects.get(name=room)
-    messages = Message.objects.filter(room=room_details.id)
+    messages = Message.objects.filter(room=room_details.id, private=False)
     return JsonResponse({'messages': list(messages.values())})
 
 

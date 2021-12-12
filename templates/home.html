@@ -96,12 +96,19 @@ body {
     }
     </style>
 
+    <a href="{% url 'make_room' %}">Click here</a>
+
     <form id="post-form" method="POST" action="checkview">
         {% csrf_token %}
         <label>Room Name</label>
         <input type="text" name="room_name" id="room_name" width="100px" />
         <label>Username</label>
         <input type="text" name="username" id="username" width="100px" />
+        <label>Password</label>
+        <input type="text" name="password" id="password" width="100px" />
+        <input type="checkbox" id="private" name="private" value="true">
+        <input name="private" type="hidden" value="false" />
+        <label for="private">Private</label><br>
         <input type="submit" value="Enter Room">
     </form>
 

@@ -7,3 +7,8 @@
 - Deadline to have a working application: Saturday, Nov 27
 - Public Room / Private Room Feature
 - Set time limit on messages
+
+# Public/Private Branch 
+- Having Issues with server -> can't access database?
+- Maybe make django form instead of html form, make handling booleans easier?
+- encrypt passwords

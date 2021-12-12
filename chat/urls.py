@@ -9,5 +9,7 @@ urlpatterns = [
     path('checkview', views.checkview, name='checkview'),
     path('send', views.send, name='send'),
     path('getMessages/<str:room>/', views.getMessages, name='getMessages'),
-    path('send_email', views.send_email, name='send_email')
+    path('send_email', views.send_email, name='send_email'),
+    path('make_room', views.RoomCreateView.as_view(), name='make_room'),
+    path('send_make_room/', views.makeroom, name='send_make_room')
 ]
