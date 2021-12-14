@@ -1,12 +1,25 @@
 # resource : https://www.youtube.com/watch?v=IpAk1Eu52GU&t=2297s
-from django.shortcuts import render, redirect
-from chat.models import Room, Message
+from django.shortcuts import get_object_or_404, render, redirect
+from chat.models import Room, Message, PrivateRoom
 from django.http import HttpResponse, JsonResponse
 from django.core.mail import EmailMessage
+from django.views import generic
 
 # Create your views here.
+
 def home(request):
     return render(request, 'home.html')
+
+def public(request):
+    return render(request, 'public.html')
+
+
+class PrivateView(generic.ListView):
+    model = PrivateRoom
+    template_name = 'private.html'
+    context_object_name = 'private_room_list'
+    def get_queryset(self):
+        return PrivateRoom.objects.all()
 
 
 def room(request, room):
@@ -16,6 +29,7 @@ def room(request, room):
     'room': room, 
     'room_details': room_details
     })
+
 
 #checks if room already exists, makes one if doesnt, redirects if does
 def checkview(request):
@@ -28,6 +42,8 @@ def checkview(request):
         new_room = Room.objects.create(name = room)
         new_room.save()
         return redirect("/"+room+"/?username="+username)
+        
+
 
 #creates new message on submit
 def send(request):

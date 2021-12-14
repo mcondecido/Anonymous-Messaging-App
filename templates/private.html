@@ -1,0 +1,178 @@
+<!-- resource : https://www.youtube.com/watch?v=IpAk1Eu52GU&t=2297s -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 0 20px;
+}
+p {color: #111; font-size: 20px; font-weight: 300; line-height: 32px; margin: 0 0 10px; text-align: center;}
+
+.btn {
+    width: 100%;
+    text-align: center;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 14px 20px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  /* Darker background on mouse-over */
+  .btn:hover {
+    background-color: #45a049;
+  }
+
+.container {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.darker {
+  border-color: #ccc;
+  background-color: #ddd;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.center {
+    margin: 0;
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+  .center-modified {
+    margin: 0;
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+.time-left {
+  float: left;
+  color: #999;
+}
+</style>
+</head>
+<body>
+
+<div align="center">
+    <h2>Django Chat</h2>
+</div>
+
+{% if private_room_list %}
+<div class="container">
+    <style>
+    input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+
+    input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+
+    input[type=password]{
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=submit]:hover {
+    background-color: #45a049;
+    }
+
+
+    div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    }
+    </style>
+
+    <form id="post-form" method="POST" action="checkview">
+        {% csrf_token %}
+
+        <label>Room Name:</label>
+            <select>
+                {% for room in private_room_list %}
+                    <option value = "{{ room.name }}">{{room.name}}</option>
+                {% endfor %}
+            </select>
+            <label>Username</label>
+            <input type="text" name="username" id="username" width="100px" />
+            <label>Password</label>
+            <input type="password" name="password" id="password" width="100px" />
+            <input type="submit" value="Enter Room">
+        {% else %}
+    </form>
+</div>
+{% endif %}
+
+{% if private_room_list %}
+    <div class="container">
+        <h3>Don't Have a Room? Create Your Own Private Room<h3>
+        <button class="btn"><i class="fa fa-lock"></i> Create Room</button>
+    </div>
+    {% else %}
+    <div class="container">
+        <p>No Room Has Been Created! Create Your Own Private Room<p>
+        <button class="btn"><i class="fa fa-lock"></i> Create Room</button>
+    </div>
+{% endif %}
+
+</body>
+
+
+</html>
