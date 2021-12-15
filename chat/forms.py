@@ -17,3 +17,4 @@ class PrivateForm(ModelForm):
         model = PrivateRoom
         fields = ('name', 'password',)
         labels = add_labels
+    password = forms.CharField(widget=forms.PasswordInput, max_length=100)

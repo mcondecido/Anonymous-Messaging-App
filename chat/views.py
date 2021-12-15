@@ -12,8 +12,8 @@ from django.contrib.auth.hashers import make_password
 def home(request):
     return render(request, 'home.html')
 
-def public(request):
-    return render(request, 'public.html')
+#def public(request):
+#    return render(request, 'public.html')
 
 def private(request):#, #generic.ListView):
 
@@ -27,13 +27,12 @@ def private(request):#, #generic.ListView):
             username = form.cleaned_data.get('username')
             password = make_password(password)
 
-            #return HttpResponse(room_details)
             if PrivateRoom.objects.filter(name = room_name).exists():
                 priv_room = PrivateRoom.objects.get(name=room_name)
                 if password == priv_room.password:
                     return redirect("/priv_room/"+room_name+"/?username="+username)
                 else:
-                    return HttpResponse(password)
+                    return HttpResponse('Incorrect password!')
             else:
                 new_room = PrivateRoom.objects.create(name=room_name, password=password)
                 new_room.save()
@@ -43,11 +42,26 @@ def private(request):#, #generic.ListView):
     private_room_list = PrivateRoom.objects.all()
     return render(request, 'private.html', {'form': form, 'private_room_list': private_room_list})
 
-    """ model = PrivateRoom
-    template_name = 'private.html'
-    context_object_name = 'private_room_list' """
-    """ def get_queryset(self):
-        return PrivateRoom.objects.all() """
+def public(request):
+    if request.method == "POST":
+        form = PublicForm(request.POST)
+
+        if form.is_valid():
+            room_details = form.save(commit=False)
+            room_name = form.cleaned_data.get('name')
+            username = form.cleaned_data.get('username')
+
+            if Room.objects.filter(name = room_name).exists():
+                pub_room = Room.objects.get(name=room_name)
+                return redirect("/pub_room/"+room_name+"/?username="+username)
+            else:
+                new_room = Room.objects.create(name=room_name)
+                new_room.save()
+                return redirect("/pub_room/"+room_name+"/?username="+username)
+    
+    form = PublicForm()
+    public_room_list = PrivateRoom.objects.all()
+    return render(request, 'public.html', {'form': form, 'public_room_list': public_room_list})
 
 
 def room(request, room):
