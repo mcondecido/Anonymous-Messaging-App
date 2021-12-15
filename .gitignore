@@ -1,0 +1,9 @@
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+models.cpython-39.pyc
+urls.cpython-39.pyc
+views.cpython-39.pyc
