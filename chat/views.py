@@ -14,7 +14,6 @@ def home(request):
 def public(request):
     return render(request, 'public.html')
 
-
 def private(request):#, #generic.ListView):
 
     if request.method == "POST":

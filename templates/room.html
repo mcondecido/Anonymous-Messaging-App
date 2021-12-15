@@ -72,7 +72,7 @@ $(document).ready(function(){
 setInterval(function(){
     $.ajax({
         type: 'GET',
-        url : "/getMessages/{{room}}/",
+        url : "/getMessages/pub/{{room}}/",
         success: function(response){
             console.log(response);
             $("#display").empty();
