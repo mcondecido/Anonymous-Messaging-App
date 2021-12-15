@@ -95,82 +95,15 @@ p {color: #111; font-size: 20px; font-weight: 300; line-height: 32px; margin: 0 
     <h2>Django Chat</h2>
 </div>
 
-{% if private_room_list %}
-<div class="container">
-    <style>
-    input[type=text], select {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    }
-
-    input[type=submit] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    }
-
-    input[type=password]{
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-    input[type=submit]:hover {
-    background-color: #45a049;
-    }
 
 
-    div {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    }
-    </style>
-
-    <form id="post-form" method="POST" action="checkview">
-        {% csrf_token %}
-
-        <label>Room Name:</label>
-            <select>
-                {% for room in private_room_list %}
-                    <option value = "{{ room.name }}">{{room.name}}</option>
-                {% endfor %}
-            </select>
-            <label>Username</label>
-            <input type="text" name="username" id="username" width="100px" />
-            <label>Password</label>
-            <input type="password" name="password" id="password" width="100px" />
-            <input type="submit" value="Enter Room">
-        {% else %}
+{% block content %}
+  <p>Enter an already existing private room, or create your own!<p>
+    <form method="POST" class="post-form">{% csrf_token %}
+      {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Create</button>
     </form>
-</div>
-{% endif %}
-
-{% if private_room_list %}
-    <div class="container">
-        <h3>Don't Have a Room? Create Your Own Private Room<h3>
-        <button class="btn"><i class="fa fa-lock"></i> Create Room</button>
-    </div>
-    {% else %}
-    <div class="container">
-        <p>No Room Has Been Created! Create Your Own Private Room<p>
-        <button class="btn"><i class="fa fa-lock"></i> Create Room</button>
-    </div>
-{% endif %}
+{% endblock %}
 
 </body>
 

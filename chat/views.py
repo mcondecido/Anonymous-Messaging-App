@@ -4,6 +4,7 @@ from chat.models import Room, Message, PrivateRoom
 from django.http import HttpResponse, JsonResponse
 from django.core.mail import EmailMessage
 from django.views import generic
+from chat.forms import PublicForm, PrivateForm
 
 # Create your views here.
 
@@ -14,17 +15,51 @@ def public(request):
     return render(request, 'public.html')
 
 
-class PrivateView(generic.ListView):
-    model = PrivateRoom
+def private(request):#, #generic.ListView):
+
+    if request.method == "POST":
+        form = PrivateForm(request.POST)
+
+        if form.is_valid():
+            room_details = form.save(commit=False)
+            room_name = form.cleaned_data.get('name')
+            password = form.cleaned_data.get('password')
+            username = form.cleaned_data.get('username')
+
+            #return HttpResponse(room_details)
+            if PrivateRoom.objects.filter(name = room_name).exists():
+                priv_room = PrivateRoom.objects.get(name=room_name)
+                if password == priv_room.password:
+                    return redirect("/"+room_name+"/?username="+username)
+                else:
+                    return HttpResponse('Incorrect password!')
+            else:
+                new_room = PrivateRoom.objects.create(name=room_name, password=password)
+                new_room.save()
+                return redirect("/"+room_name+"/?username="+username)
+
+    form = PrivateForm()
+    private_room_list = PrivateRoom.objects.all()
+    return render(request, 'private.html', {'form': form, 'private_room_list': private_room_list})
+
+    """ model = PrivateRoom
     template_name = 'private.html'
-    context_object_name = 'private_room_list'
-    def get_queryset(self):
-        return PrivateRoom.objects.all()
+    context_object_name = 'private_room_list' """
+    """ def get_queryset(self):
+        return PrivateRoom.objects.all() """
 
 
 def room(request, room):
     username = request.GET.get('username')
     room_details = Room.objects.get(name = room)
+    return render(request, 'room.html', {'username': username, 
+    'room': room, 
+    'room_details': room_details
+    })
+
+def private_room(request, room):
+    username = request.GET.get('username')
+    room_details = PrivateRoom.objects.get(name = room)
     return render(request, 'room.html', {'username': username, 
     'room': room, 
     'room_details': room_details
@@ -42,8 +77,6 @@ def checkview(request):
         new_room = Room.objects.create(name = room)
         new_room.save()
         return redirect("/"+room+"/?username="+username)
-        
-
 
 #creates new message on submit
 def send(request):
