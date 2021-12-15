@@ -122,9 +122,11 @@ setInterval(function(){
           message:$('#message').val(),
         csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
       },
+      /*
       success: function(data){
         alert(data)
       }
+      */
     });
     document.getElementById('message').value = ''
   });
