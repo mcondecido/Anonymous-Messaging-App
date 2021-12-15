@@ -9,6 +9,7 @@ from chat.forms import PublicForm, PrivateForm
 from django.contrib.auth.hashers import check_password, make_password
 from django.utils import timezone
 from datetime import datetime, timedelta
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -65,13 +66,16 @@ def room(request, room):
 
 def private_room(request, room):
     username = request.GET.get('username')
-    room_details = PrivateRoom.objects.get(name = room)
-    if (request.session['form-submitted'] == room):   
-        return render(request, 'privateroom.html', {'username': username, 
-            'room': room, 
-            'room_details': room_details
-            })
-    else:
+    try:
+        room_details = PrivateRoom.objects.get(name = room)
+        if (request.session['form-submitted'] == room):   
+            return render(request, 'privateroom.html', {'username': username, 
+                'room': room, 
+                'room_details': room_details
+                })
+        else:
+            return redirect('home')
+    except PrivateRoom.DoesNotExist:
         return redirect('home')
 
     
