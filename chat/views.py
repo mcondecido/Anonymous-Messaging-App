@@ -5,7 +5,9 @@ from django.http import HttpResponse, JsonResponse
 from django.core.mail import EmailMessage
 from django.views import generic
 from chat.forms import PublicForm, PrivateForm
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
+from django.utils import timezone
+from datetime import datetime, timedelta
 
 # Create your views here.
 
@@ -25,17 +27,19 @@ def private(request):#, #generic.ListView):
             room_name = form.cleaned_data.get('name')
             password = form.cleaned_data.get('password')
             username = form.cleaned_data.get('username')
-            password = make_password(password)
 
             if PrivateRoom.objects.filter(name = room_name).exists():
                 priv_room = PrivateRoom.objects.get(name=room_name)
-                if password == priv_room.password:
+                if check_password(password, priv_room.password):
+                    request.session['form-submitted'] = room_name
                     return redirect("/priv_room/"+room_name+"/?username="+username)
                 else:
                     return HttpResponse('Incorrect password!')
             else:
+                password = make_password(password)
                 new_room = PrivateRoom.objects.create(name=room_name, password=password)
                 new_room.save()
+                request.session['form-submitted'] = room_name
                 return redirect("/priv_room/"+room_name+"/?username="+username)
 
     form = PrivateForm()
@@ -74,11 +78,18 @@ def room(request, room):
 
 def private_room(request, room):
     username = request.GET.get('username')
-    room_details = PrivateRoom.objects.get(name = room)
-    return render(request, 'privateroom.html', {'username': username, 
-    'room': room, 
-    'room_details': room_details
-    })
+    try:
+        room_details = PrivateRoom.objects.get(name = room)
+        if (request.session['form-submitted'] == room):   
+            return render(request, 'privateroom.html', {'username': username, 
+                'room': room, 
+                'room_details': room_details
+                })
+        else:
+            return redirect('home')
+    except PrivateRoom.DoesNotExist:
+        return redirect('home')
+
 
 
 #checks if room already exists, makes one if doesnt, redirects if does
@@ -98,8 +109,11 @@ def send(request):
     message = request.POST['message']
     username = request.POST['username']
     room_id = request.POST['room_id']
-
-    new_message = Message.objects.create(text=message, user=username, room=room_id, private=False)
+    current_time = timezone.localtime(timezone.now())
+    date_time = current_time.strftime("%m/%d/%Y %H:%M:%S")
+    #change timedelta(seconds=5) to (days=1) if you want 24 hour expiration
+    expiration_date = datetime.now() + timedelta(seconds=5)
+    new_message = Message.objects.create(text=message, user=username, room=room_id, expiration=expiration_date, date=date_time, private=False)
     new_message.save()
     return HttpResponse('Message sent')
 
@@ -107,22 +121,26 @@ def privatesend(request):
     message = request.POST['message']
     username = request.POST['username']
     room_id = request.POST['room_id']
-
-    new_message = Message.objects.create(text=message, user=username, room=room_id, private=True)
+    current_time = timezone.localtime(timezone.now())
+    date_time = current_time.strftime("%m/%d/%Y %H:%M:%S")
+    #change timedelta(seconds=5) to (days=1) if you want 24 hour expiration
+    expiration_date = datetime.now() + timedelta(seconds=5)
+    new_message = Message.objects.create(text=message, user=username, room=room_id, private=True, expiration=expiration_date, date=date_time)
     new_message.save()
     return HttpResponse('Message sent')
 
 #displays all messages in room
 def getMessages(request, room):
+    now = datetime.now()
     room_details = Room.objects.get(name=room)
-    messages = Message.objects.filter(room=room_details.id, private=False)
+    messages = Message.objects.filter(room=room_details.id, private=False, expiration__gt=now)
     return JsonResponse({'messages': list(messages.values())})
 
 def getPrivateMessages(request, room):
+    now = datetime.now()
     room_details = PrivateRoom.objects.get(name=room)
-    messages = Message.objects.filter(room=room_details.id, private=True)
+    messages = Message.objects.filter(room=room_details.id, private=True, expiration__gt=now)
     return JsonResponse({'messages': list(messages.values())})
-
 
 def send_email(request):
     try:
