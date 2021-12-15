@@ -98,6 +98,7 @@ def send(request):
     room_id = request.POST['room_id']
     current_time = timezone.localtime(timezone.now())
     date_time = current_time.strftime("%m/%d/%Y %H:%M:%S")
+    #change timedelta(seconds=5) to (days=1) if you want 24 hour expiration
     expiration_date = datetime.now() + timedelta(seconds=5)
     new_message = Message.objects.create(text=message, user=username, room=room_id, expiration=expiration_date, date=date_time, private=False)
     new_message.save()
@@ -109,6 +110,7 @@ def privatesend(request):
     room_id = request.POST['room_id']
     current_time = timezone.localtime(timezone.now())
     date_time = current_time.strftime("%m/%d/%Y %H:%M:%S")
+    #change timedelta(seconds=5) to (days=1) if you want 24 hour expiration
     expiration_date = datetime.now() + timedelta(seconds=5)
     new_message = Message.objects.create(text=message, user=username, room=room_id, private=True, expiration=expiration_date, date=date_time)
     new_message.save()
