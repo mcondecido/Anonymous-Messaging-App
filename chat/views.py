@@ -5,6 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.core.mail import EmailMessage
 from django.views import generic
 from chat.forms import PublicForm, PrivateForm
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 
@@ -24,6 +25,7 @@ def private(request):#, #generic.ListView):
             room_name = form.cleaned_data.get('name')
             password = form.cleaned_data.get('password')
             username = form.cleaned_data.get('username')
+            password = make_password(password)
 
             #return HttpResponse(room_details)
             if PrivateRoom.objects.filter(name = room_name).exists():
@@ -31,7 +33,7 @@ def private(request):#, #generic.ListView):
                 if password == priv_room.password:
                     return redirect("/priv_room/"+room_name+"/?username="+username)
                 else:
-                    return HttpResponse('Incorrect password!')
+                    return HttpResponse(password)
             else:
                 new_room = PrivateRoom.objects.create(name=room_name, password=password)
                 new_room.save()
