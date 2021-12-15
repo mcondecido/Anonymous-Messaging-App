@@ -10,7 +10,8 @@ class PrivateRoom(models.Model):
     password = models.CharField(max_length=100)
 class Message(models.Model):
     text = models.CharField(max_length=10000)
-    date = models.DateTimeField(default=datetime.now, blank=True)
+    date = models.CharField(max_length=10000, default="current date")
+    expiration = models.DateTimeField(default=datetime.now, blank=True)
     user = models.CharField(max_length=100)
     room = models.CharField(max_length=100)
     private = models.BooleanField(default=False)
