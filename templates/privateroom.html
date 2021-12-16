@@ -71,42 +71,6 @@ setInterval(function(){
       </div>
   </form>
 </div>
-
-<div>
-  <p class="lead">Type in a valid email address. Our website's Gmail account will send the recipient an email containing the link to this website and the room code that you are currently inhabiting. </p>
-</div>
-<div class="container">
-
-    <form id="emails" >
-        {% csrf_token %}
-        <input type="hidden" name="room_name" id="room_name" value="{{room_details.name}}"/>
-        <div class="container d-flex align-items-center justify-content-center">
-          <div class="mb-3">
-            <input type="text" class="form-control" name="recipient" id="recipient" />
-          </div>
-          <div class="mb-3">
-            <input type="submit" class="btn btn-outline-primary" value="Send Invitation Email"/>
-          </div>
-        </div>
-    </form>
-</div>
-
-<script type="text/javascript">
-  $(document).on('submit','#emails',function(e){
-    e.preventDefault();
-    $.ajax({
-        type:'POST',
-        url:'/send_email',
-        data:{
-          recipient:$('#recipient').val(),
-          room_name:$('#room_name').val(),
-          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-        },
-        success: function(data){
-          alert(data)
-        }
-    });
-});
 </script>
 
 <script type="text/javascript">

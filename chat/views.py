@@ -66,7 +66,7 @@ def public(request):
                 return redirect("/pub_room/"+room_name+"/?username="+username)
     
     form = PublicForm()
-    public_room_list = PrivateRoom.objects.all()
+    public_room_list = Room.objects.all()
     return render(request, 'public.html', {'form': form, 'public_room_list': public_room_list})
 
 
@@ -116,7 +116,7 @@ def send(request):
     current_time = timezone.localtime(timezone.now())
     date_time = current_time.strftime("%m/%d/%Y %H:%M:%S")
     #change timedelta(seconds=5) to (days=1) if you want 24 hour expiration
-    expiration_date = datetime.now() + timedelta(seconds=5)
+    expiration_date = datetime.now() + timedelta(days=1)
     new_message = Message.objects.create(text=message, user=username, room=room_id, expiration=expiration_date, date=date_time, private=False)
     new_message.save()
     return HttpResponse('Message sent')
@@ -128,7 +128,7 @@ def privatesend(request):
     current_time = timezone.localtime(timezone.now())
     date_time = current_time.strftime("%m/%d/%Y %H:%M:%S")
     #change timedelta(seconds=5) to (days=1) if you want 24 hour expiration
-    expiration_date = datetime.now() + timedelta(seconds=5)
+    expiration_date = datetime.now() + timedelta(days=1)
     new_message = Message.objects.create(text=message, user=username, room=room_id, private=True, expiration=expiration_date, date=date_time)
     new_message.save()
     return HttpResponse('Message sent')
@@ -145,14 +145,3 @@ def getPrivateMessages(request, room):
     room_details = PrivateRoom.objects.get(name=room)
     messages = Message.objects.filter(room=room_details.id, private=True, expiration__gt=now)
     return JsonResponse({'messages': list(messages.values())})
-
-def send_email(request):
-    try:
-        recipient= request.POST['recipient']
-        room_name = request.POST['room_name']
-        msg = EmailMessage('Join this anonymous group chat session!',
-                        ' Go to this link - https://anonymous-chat-app-4501.herokuapp.com/ \n Create a new username and enter this room code: ' + room_name + '.', to=[recipient])
-        msg.send()
-        return HttpResponse('Email sent!')
-    except:
-        return HttpResponse('Incorrect email format!')
