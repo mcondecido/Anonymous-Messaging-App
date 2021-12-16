@@ -1,9 +1,4 @@
 # Anonymous-Messaging-App
-- When working on project, notify groupmates on GroupMe of what you're working on and what you accomplished that day.
-- Look for how messages would work / not showing when deployed locally
-- Research further features to add to anonymous messaging platform.
-- Figure out how to deploy on Heroku
-- Edit Frontend
-- Deadline to have a working application: Saturday, Nov 27
-- Public Room / Private Room Feature
-- Set time limit on messages
+Most Recent Branch with our Code: new_branch
+
+From Project Report: "Since our app is running locally, to test the functionality of multiple people in the same room, go to the local url in your browser and in an incognito tab. If you are in the same room, you’ll receive messages from both 'users'."
