@@ -3,3 +3,4 @@ django-heroku
 gunicorn
 django-crispy-forms==1.6.1
 celery>=5.0.5
+django-crispy-bootstrapt>=1.11.1
