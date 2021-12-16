@@ -1,6 +1,3 @@
 Django
 django-heroku
 gunicorn
-crispy_forms
-crispy_bootstrap5
-django_celery_beat
