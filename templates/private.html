@@ -26,6 +26,12 @@
   <h1 class="display-5">Private Room</h1>
 </div>
 
+{% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show in text-center" role="alert">
+          <strong> {{ message }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
 
 <div class="container d-flex align-items-center justify-content-center mt-2">
   <p class="lead">Enter an already existing private room, or create your own!<p>

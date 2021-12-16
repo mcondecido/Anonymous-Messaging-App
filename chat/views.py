@@ -8,6 +8,7 @@ from chat.forms import PublicForm, PrivateForm
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
 from datetime import datetime, timedelta
+from django.contrib import messages
 
 # Create your views here.
 
@@ -34,7 +35,8 @@ def private(request):#, #generic.ListView):
                     request.session['form-submitted'] = room_name
                     return redirect("/priv_room/"+room_name+"/?username="+username)
                 else:
-                    return HttpResponse('Incorrect password!')
+                    messages.error(request,'Password is incorrect. Try Again.')
+                    return redirect('private')
             else:
                 password = make_password(password)
                 new_room = PrivateRoom.objects.create(name=room_name, password=password)
@@ -86,9 +88,11 @@ def private_room(request, room):
                 'room_details': room_details
                 })
         else:
-            return redirect('home')
+            messages.error(request, "You can't access that room without logging in first.")
+            return redirect('private')
     except PrivateRoom.DoesNotExist:
-        return redirect('home')
+            messages.error(request, "The room you tried to access doesn't exist.")
+            return redirect('private')
 
 
 
