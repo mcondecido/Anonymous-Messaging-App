@@ -37,12 +37,11 @@
   <p class="lead">Enter an already existing private room, or create your own!<p>
 </div>
 
-{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container d-flex align-items-center justify-content-center">
     <form method="POST" class="post-form">{% csrf_token %}
-      {{ form | crispy }}
+      {{ form.as_p }}
         <button type="submit" class="btn btn-outline-primary btn-lg">Enter</button>
       </form>
     </form>
