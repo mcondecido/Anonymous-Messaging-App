@@ -3,57 +3,22 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  margin: 0 auto;
-  max-width: 800px;
-  padding: 0 20px;
-}
-
-.container {
-  border: 2px solid #dedede;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 10px 0;
-}
-
-.darker {
-  border-color: #ccc;
-  background-color: #ddd;
-}
-
-.container::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-.container img {
-  float: left;
-  max-width: 60px;
-  width: 100%;
-  margin-right: 20px;
-  border-radius: 50%;
-}
-
-.container img.right {
-  float: right;
-  margin-left: 20px;
-  margin-right:0;
-}
-
-.time-right {
-  float: right;
-  color: #aaa;
-}
-
-.time-left {
-  float: left;
-  color: #999;
-}
-</style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Anonymous Messaging App</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="home">Home</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 </head>
 <body>
 
@@ -78,7 +43,7 @@ setInterval(function(){
             $("#display").empty();
             for (var key in response.messages)
             {
-                var temp="<div class='container darker'><b>"+response.messages[key].user+"</b><p>"+response.messages[key].text+"</p><span class='time-left'>"+response.messages[key].date+"</span></div>";
+                var temp="<div class='container-fluid border'><b>"+response.messages[key].user+"</b><p>"+response.messages[key].text+"</p><span class='time-left'>"+response.messages[key].date+"</span></div>";
                 $("#display").append(temp);
             }
         },
@@ -92,109 +57,22 @@ setInterval(function(){
 
 
 <div class="container">
-    <style>
-    input[type=text], select {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    }
-
-    input[type=submit] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    }
-
-    input[type=submit]:hover {
-    background-color: #45a049;
-    }
-
-    div {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    }
-    </style>
 
     <form id="post-form">
         {% csrf_token %}
         <input type="hidden" name="username" id="username" value="{{username}}"/>
         <input type="hidden" name="room_id" id="room_id" value="{{room_details.id}}"/>
-        <input type="text" name="message" id="message" width="100px" />
-        <input type="submit" value="Send">
+        <div class="container d-flex align-items-center justify-content-center">
+            <div class="mb-3">
+              <input type="text" class="form-control" name="message" id="message" />
+            </div>
+            <div class="mb-3">
+              <input type="submit" class="btn btn-outline-primary" value="Send"/>
+            </div>
+        </div>
     </form>
 </div>
-<center>
-<h3>Invite a friend to this group chat!</h3> 
-<p>Type in a valid email address. Our website's Gmail account will send the recipient an email containing the link to this website and the room code that you are currently inhabiting. </p></center>
-<div class="container">
-    <style>
-    input[type=text], select {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    }
 
-    input[type=submit] {
-    width: 100%;
-    background-color: #4CAF49;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    }
-
-    input[type=submit]:hover {
-    background-color: #45a048;
-    }
-
-    div {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    }
-    </style>
-
-    <form id="emails" >
-        {% csrf_token %}
-        <input type="text" name="recipient" id="recipient" width="100px" />
-        <input type="hidden" name="room_name" id="room_name" value="{{room_details.name}}"/>
-
-        <input type="submit"  value="Send Invitation Email">
-    </form>
-</div>
-<script type="text/javascript">
-  $(document).on('submit','#emails',function(e){
-    e.preventDefault();
-    $.ajax({
-        type:'POST',
-        url:'/send_email',
-        data:{
-          recipient:$('#recipient').val(),
-          room_name:$('#room_name').val(),
-          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-        },
-        success: function(data){
-          alert(data)
-        }
-    });
-});
-</script>
 
 <script type="text/javascript">
   $(document).on('submit','#post-form',function(e){
@@ -209,13 +87,19 @@ setInterval(function(){
           message:$('#message').val(),
         csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
       },
+      /*
       success: function(data){
-       // alert(data)
+        alert(data)
       }
+      */
     });
     document.getElementById('message').value = ''
   });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
 
 
 </html>
