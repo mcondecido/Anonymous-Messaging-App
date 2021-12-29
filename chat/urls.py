@@ -14,5 +14,4 @@ urlpatterns = [
     path('send/priv/', views.privatesend, name='privatesend'),
     path('getMessages/pub/<str:room>/', views.getMessages, name='getMessages'),
     path('getMessages/priv/<str:room>/', views.getPrivateMessages, name='getPrivateMessages'),
-    path('send_email/', views.send_email, name='send_email')
 ]
