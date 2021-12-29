@@ -11,9 +11,11 @@ class PublicForm(ModelForm):
         fields = ('name',)
         labels = add_labels
 
+
 class PrivateForm(ModelForm):
     username = forms.CharField(max_length=100)
     class Meta:
         model = PrivateRoom
         fields = ('name', 'password',)
         labels = add_labels
+    password = forms.CharField(widget=forms.PasswordInput, max_length=100)
