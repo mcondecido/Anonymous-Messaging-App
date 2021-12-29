@@ -1,5 +1,4 @@
 # Anonymous-Messaging-App
-Most Recent Branch with our Code: new_branch
 
 Might need to do the following to run the code locally (all under the Anonymous-Messaging-App folder):
 
