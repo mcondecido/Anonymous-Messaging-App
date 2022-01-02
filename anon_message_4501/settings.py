@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'chat', 
     "crispy_forms",
     'django_celery_beat',
+    "crispy_bootstrap5",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
