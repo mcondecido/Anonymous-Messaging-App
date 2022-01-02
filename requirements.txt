@@ -2,3 +2,4 @@ Django
 django-heroku
 gunicorn
 django-crispy-forms==1.6.1
+django-celery-beat==1.5.0
