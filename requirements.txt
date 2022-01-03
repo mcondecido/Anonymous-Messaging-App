@@ -3,3 +3,4 @@ django-heroku
 gunicorn
 crispy-forms-semantic-ui>=0.2.0 # added to ease up testing of semantic ui templates
 django-crispy-forms>=1.9.0      # Use pip install -e ../django-crispy-forms for local dev
+django-bootstrap5
