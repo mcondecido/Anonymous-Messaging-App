@@ -2,6 +2,5 @@ Django
 django-heroku
 gunicorn
 django-crispy-forms==1.6.1
-django-bootstrap5
 bootstrap5
 crispy-bootstrap5
